@@ -3,6 +3,6 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'		=> 'Business::IBAN',
-    'VERSION_FROM'	=> 'IBAN.pm', # finds $VERSION
-    'PREREQ_PM'		=> {Locale::Country => 2.03}, # e.g., Module::Name => 1.1
+    'VERSION_FROM'	=> 'lib/Business/IBAN.pm', # finds $VERSION
+		#'PREREQ_PM'		=> {Locale::Country => 2.03}, # e.g., Module::Name => 1.1
 );
