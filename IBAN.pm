@@ -12,12 +12,13 @@ require Exporter;
 @EXPORT_OK = ( );
 
 @EXPORT = qw();
-$VERSION = '0.03';
+$VERSION = '0.04';
 use constant IBAN_CTR => 0;
 use constant IBAN_BBAN => 1;
 use constant IBAN_ISO => 2;
 use constant IBAN_FORMAT => 3;
-use constant IBAN_INVALID => 4;
+use constant IBAN_FORMAT2 => 4;
+use constant IBAN_INVALID => 5;
 
 sub new {
   my $type = shift;
@@ -109,6 +110,7 @@ sub valid {
 	my $iso = substr($ib,0,2,"");
 	$iso =~ s/([A-Z])/(ord $1)-55/eg;
 	my $check = substr($ib,0,2,"");
+	(push @{$self->{ERRORS}}, IBAN_FORMAT2), return if $ib =~ tr/0-9//c;
 	$ib .= "$iso$check";
 	$ib = Math::BigInt->new($ib);
 	push @{$self->{ERRORS}}, IBAN_INVALID and return unless ($ib % 97)==1;
@@ -120,7 +122,8 @@ sub valid {
 	"No Country or Iso-Code",
 	"No BBAN (Bank-Number) or Bank Identifier and Accountnumber",
 	"Could not find country",
-	"IBAN must containt two-letter ISO-Code at the begining",
+	"IBAN must contain two-letter ISO-Code at the begining",
+	"IBAN must only contain numbers after the ISO-code",
 	"IBAN is invalid",
 );
 
@@ -220,9 +223,13 @@ available for everyone. You can find informations about the IBAN at
 
 =item http://www.iban.ch
 
+=head1 VERSION
+
+Business::IBAN Version 0.04, November 6th 2003
+
 =head1 AUTHOR
 
-Tina Mueller. tinita@cpan.org
+Tina Mueller. tinita at cpan.org
 
 =head1 SEE ALSO
 

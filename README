@@ -65,6 +65,8 @@ are numbers which stand for the following errors:
 	1: No BBAN (Bank-Number) or Bank Identifier and Accountnumber
 	2: Could not find country
 	3: IBAN must containt two-letter ISO-Code at the begining
+	4: IBAN must only contain numbers after the ISO-code,
+	5: IBAN is invalid
 
 CAVEATS
 
@@ -79,4 +81,4 @@ http://www.iban.ch
 
 AUTHOR
 
-Tina Mueller. tinita@cpan.org
+Tina Mueller. tinita at cpan.org
