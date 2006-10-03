@@ -3,16 +3,9 @@ package Business::IBAN;
 require 5.005_62;
 use Math::BigInt;
 use strict;
-use vars qw(@EXPORT_OK @EXPORT $VERSION @errors);
+use vars qw($VERSION @errors);
 
-require Exporter;
-
-use base qw(Exporter);
-
-@EXPORT_OK = ( );
-
-@EXPORT = ();
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 # error codes
 use constant IBAN_CTR => 0;
@@ -23,16 +16,14 @@ use constant IBAN_FORMAT2 => 4;
 use constant IBAN_INVALID => 5;
 
 sub new {
-  my $type = shift;
-  my $self  = {};
-  bless($self, $type);
-  return $self;
-
-}
+    my ($class) = @_;
+    my $self = {};
+    bless $self, $class;
+    return $self;
+} ## end sub new
 # --------------------------------------
 sub getIBAN {
-	my $self = shift;
-	my $args = shift;
+    my ($self, $args) = @_;
 	my $iso = uc $args->{ISO};
 	my $bban = $args->{BBAN};
 	my $bic = $args->{BIC};
@@ -85,25 +76,21 @@ sub iban_unspec {
 }
 # --------------------------------------
 sub getError {
-	my $self = shift;
-	return unless $self->{ERRORS};
-	return @{$self->{ERRORS}};
+	return unless $_[0]->{ERRORS};
+	return @{$_[0]->{ERRORS}};
 }
 # --------------------------------------
 sub printError {
-	my $self = shift;
-	return unless $self->{ERRORS};
-	print "$errors[$_]\n" for @{$self->{ERRORS}};
+	return unless $_[0]->{ERRORS};
+	print "$errors[$_]\n" for @{$_[0]->{ERRORS}};
 }
 # --------------------------------------
 sub country {
-	my $self = shift;
-	return $self->{COUNTRY};
+	return $_[0]->{COUNTRY};
 }
 # --------------------------------------
 sub valid {
-	my $self = shift;
-	my $ib = shift;
+    my ($self, $ib) = @_;
 	delete $self->{ERRORS};
 	# remove spaces
 	$ib =~ tr/ //d;
@@ -112,9 +99,9 @@ sub valid {
 	$ib =~ s/^IBAN//i;
 	push @{$self->{ERRORS}}, IBAN_FORMAT unless $ib =~ m/^[A-Z][A-Z]/i;
 	return if $self->{ERRORS};
-	my $iso = substr($ib,0,2,"");
+	my $iso = substr $ib, 0, 2, "";
 	$iso =~ s/([A-Z])/(ord $1)-55/eg;
-	my $check = substr($ib,0,2,"");
+	my $check = substr $ib, 0, 2, "";
 	# convert alpha characters to their ascii code
 	$ib =~ s/([A-Z])/(ord $1)-55/eg;
 	# iban still contains characters which are not numbers!
@@ -131,7 +118,7 @@ sub valid {
 	"No BBAN (Bank-Number) or Bank Identifier and Accountnumber supplied",
 	"Could not find country",
 	"IBAN must contain two-letter ISO-Code at the beginning",
-	"IBAN must only contain only alphanumerics  after the ISO-code",
+	"IBAN must only contain only alphanumerics after the ISO-code",
 	"IBAN is invalid",
 );
 
@@ -148,6 +135,8 @@ Business::IBAN - Validate and generate IBANs
   use Locale::Country;
   my $cc = country2code('Germany');
   my $iban = Business::IBAN->new();
+
+  # ---------- generate
   my $ib = $iban->getIBAN(
   {
     ISO => $cc, # or "DE", etc.
@@ -171,8 +160,10 @@ Business::IBAN - Validate and generate IBANs
     # print your own error messages (for description of error-
     # codes see section ERROR-CODES
   }
+
+  # ------------ validate
   if ($iban->valid($ib)) {
-		# note: this also accepts IBANs in paper format with spaces added
+    # note: this also accepts IBANs in paper format with spaces added
     print "$ib is valid\n";
   }
   else {
@@ -189,6 +180,8 @@ account exists or that the bank account number for the
 bank itself is valid.
 You can also create an IBAN if you supply
 
+=over 4
+
 =item
 
 - your BBAN (Basic Bank Account Number),
@@ -201,6 +194,8 @@ You can also create an IBAN if you supply
   or the english name for your country.
 
 But note that only your bank is supposed to create your official IBAN.
+
+=back
 
 =head2 REQUIRES
 
@@ -233,20 +228,20 @@ them for you if you have your BBAN. It's not for generating valid
 numbers for illegal purposes. The algorithm is simple and publicly
 available for everyone. You can find informations about the IBAN at
 
+=over 4
+
 =item http://www.ecbs.org
 
 =item http://www.iban.ch
 
+=back
+
 =head1 VERSION
 
-Business::IBAN Version 0.05, November 6th 2003
+Business::IBAN Version 0.06
 
 =head1 AUTHOR
 
-Tina Mueller. tinita at cpan.org
-
-=head1 SEE ALSO
-
-perl(1).
+Tina Mueller. tinita(at)cpan.org
 
 =cut

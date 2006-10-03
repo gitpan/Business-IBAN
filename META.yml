@@ -1,15 +1,15 @@
---- #YAML:1.0
+---
 name: Business-IBAN
-version: 0.05
+version: 0.06
+author: ~
+abstract: Validate and generate IBANs
 license: perl
-distribution_type: module
-requires: {}
+requires:
+  Math::BigInt: 0
 recommends:
   Locale::Country: 2.03
-build_requires: {}
-conflicts: {}
 provides:
   Business::IBAN:
     file: lib/Business/IBAN.pm
-    version: 0.05
-generated_by: Module::Build version 0.21
+    version: 0.06
+generated_by: Module::Build version 0.2611

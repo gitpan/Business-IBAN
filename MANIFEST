@@ -3,6 +3,8 @@ README
 Changes
 MANIFEST
 Makefile.PL
-t/test.t
+t/01_Business_IBAN.t
+t/02_pod.t
 META.yml
 Build.PL
+examples/validate.pl
